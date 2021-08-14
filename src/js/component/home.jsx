@@ -1,25 +1,52 @@
-import React from "react";
+import React, { Fragment, useEffect, useState } from "react";
+import Casilla from "./casilla.jsx";
 
-//include images into your bundle
-import rigoImage from "../../img/rigo-baby.jpg";
-
-//create your first component
 const Home = () => {
+	const [turn, setTurn] = useState("x");
+	const [tablero, setTablero] = useState([]);
+	const [tableroVisual, setTableroVisual] = useState([]);
+
+	const checkForWinner = newTablero => {
+		// [0, 1, 2], [3, 4, 5], [6, 7 ,8], [0, 3, 6]
+		// if (newTablero[0]==newTablero[1]==newTablero[2]!=""){
+		//	return true;
+		//}
+		console.log();
+	};
+
+	const changeTurn = i => {
+		let newTablero = [
+			...tablero
+		]; /*se copia tablero por ser una variable de estado, que no se puede modificar directamente*/
+		newTablero[i] = turn; /*asigno en esta posición el valor de turn*/
+		setTablero(newTablero); /*se actualiza variable tablero*/
+		checkForWinner();
+		if (turn == "x") {
+			setTurn("o");
+		} else {
+			setTurn("x");
+		}
+	};
+
+	useEffect(() => {
+		let board = [];
+
+		for (let i = 0; i < 9; i++) {
+			board.push("");
+		}
+		setTablero(board);
+	}, []);
+	const gameBoard = tablero.map((value, i) => (
+		<Casilla
+			key={i.toString()}
+			onclick={() => changeTurn(i)}
+			value={value}
+		/>
+	));
 	return (
-		<div className="text-center mt-5">
-			<h1>Hello Rigo!</h1>
-			<p>
-				<img src={rigoImage} />
-			</p>
-			<a href="#" className="btn btn-success">
-				If you see this green button... bootstrap is working
-			</a>
-			<p>
-				Made by{" "}
-				<a href="http://www.4geeksacademy.com">4Geeks Academy</a>, with
-				love!
-			</p>
-		</div>
+		<Fragment>
+			<div className="tablero">{gameBoard}</div>
+		</Fragment>
 	);
 };
 
